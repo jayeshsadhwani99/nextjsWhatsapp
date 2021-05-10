@@ -4,22 +4,39 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SearchIcon from '@material-ui/icons/Search';
 import styled from 'styled-components';
 import * as EmailValidator from 'email-validator';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import Chat from './Chat';
 
 function Sidebar() {
+
+    const [user] = useAuthState(auth);
+    const userChatRef = db.collection('chats').where('users', 'array-contains', user.email);
+    const [chatSnapshot, loading, error] = useCollection(userChatRef);
 
     const createChat = () => {
         const input = prompt('Please enter the email of the user you wish to chat with.');
         if (!input) return null;
-        if(EmailValidator.validate(input)) {
-            // Add chat to DB
+        if(EmailValidator.validate(input) && !chatAlreadyExists(input) && input != user.email) {
+            // Add chat to DB if it doesn't already exist
+            db.collection('chats').add({
+                users: [user.email, input],
+            });
         }
     }
+
+    const chatAlreadyExists = (recipientEmail) => 
+        !!chatSnapshot?.docs.find(
+            (chat) => chat.data().users.find(user => 
+                user === recipientEmail)
+                ?.length>0
+        );
 
     return (
         <Container>
             <Header>
-                <UserAvatar onClick={() => auth.signOut()} />
+                <UserAvatar onClick={() => auth .signOut()} />
 
                 <IconsContainer>
                     <IconButton>
@@ -37,6 +54,15 @@ function Sidebar() {
             </Search>
             
             <SidebarButton onClick={createChat}>Start a new chat</SidebarButton>
+
+            {/* Chats */}
+            {chatSnapshot?.docs.map(chat => (
+                <Chat
+                    key={chat.id}
+                    id={chat.id}
+                    user={chat.data().users}
+                />
+            ))}
         </Container>
     )
 }

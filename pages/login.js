@@ -22,7 +22,7 @@ function Login() {
     )
 }
 
-export default Login
+export default Login;
 
 const Container = styled.div`
     display: grid;
@@ -45,3 +45,5 @@ const Logo = styled.img`
     width: 200px;
     margin-bottom: 50px;
 `;
+
+const Button = styled.button``;
