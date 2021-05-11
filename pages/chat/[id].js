@@ -1,8 +1,7 @@
-import { red } from '@material-ui/core/colors';
 import Head from 'next/head';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import styled from 'styled-components';
-import ChatScreen from '../../components/CHatScreen';
+import ChatScreen from '../../components/ChatScreen';
 import Sidebar from '../../components/Sidebar';
 import { auth, db } from '../../firebase';
 import getRecipientEmail from '../../utils/getRecipientEmail';
