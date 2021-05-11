@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useAuthState } from 'react-firebase-hooks';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase';
 import moment from 'moment';
 
@@ -37,7 +37,7 @@ const MessageElement = styled.p`
 `;
 
 const Sender = styled(MessageElement)`
-    marign-left: auto;
+    margin-left: auto;
     background-color: #dcf8c6;
 `;
 

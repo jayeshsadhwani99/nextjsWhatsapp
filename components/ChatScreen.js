@@ -15,26 +15,26 @@ function ChatScreen({ chat, messages }) {
     const [user] = useAuthState(auth);
     const router = useRouter();
     const [input, setInput] = useState('');
-    const endOfMessageRef = useRef(null);
-    const [messagesSnapshot] = useCollection(db.collection('chats').doc(router.query.id).collection('messages').orderBy('timestamp', 'asc'));
+    const endOfMessagesRef = useRef(null);
+    const [messagesSnapshot] = useCollection(db.collection('chats').doc(router.query.id).collection('message').orderBy('timestamp', 'asc'));
     const [recipientSnapshot] = useCollection(
         db.collection('users').where('email', '==', getRecipientEmail(chat.users, user))
     );
 
     const showMessages = () => {
         if (messagesSnapshot) {
-            return messagesSnapshot.docs.map(message => (
+            return messagesSnapshot.docs.map((message) => (
                 <Message
                     key={message.id}
                     user={message.data().user}
                     message={{
                         ...message.data(),
-                        timestamp: message.data().timstamp?.toDate().getTime(),
+                        timestamp: message.data().timestamp?.toDate().getTime(),
                     }}
                 />
-            ))
+            ));
         } else {
-            return JSON.parse(messages).map(message => (
+            return JSON.parse(messages).map((message) => (
                 <Message
                     key={message.id}
                     user={message.user}
@@ -65,14 +65,14 @@ function ChatScreen({ chat, messages }) {
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             message: input,
             user: user.email,
-            photoUrl: user.photoUrl,
+            photoUrl: user.photoURL,
         });
 
         setInput('');
         scrollToBottom();
     }
 
-    const recipient = recipientSnapshot?.docs?.[0].data();
+    const recipient = recipientSnapshot?.docs?.[0]?.data();
     const recipientEmail = getRecipientEmail(chat.users, user);
 
     return (
@@ -114,7 +114,7 @@ function ChatScreen({ chat, messages }) {
             <MessageContainer>
                 {showMessages()}
                 <EndOfMessage 
-                    ref={endOfMessageRef}
+                    ref={endOfMessagesRef}
                 />
             </MessageContainer>
 

@@ -42,7 +42,7 @@ export async function getServerSideProps(context) {
     }))
 
     const chatRes = await ref.get();
-    const chats = {
+    const chat = {
         id: chatRes.id,
         ...chatRes.data()
     }

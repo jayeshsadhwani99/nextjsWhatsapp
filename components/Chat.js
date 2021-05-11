@@ -6,7 +6,7 @@ import { auth, db } from '../firebase';
 import getRecipientEmail from '../utils/getRecipientEmail';
 import { useRouter } from 'next/router';
 
-function Chat({id, user}) {
+function Chat({id, users}) {
     const router = useRouter();
 
     const [user] = useAuthState(auth);
